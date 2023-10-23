@@ -24,6 +24,7 @@ public class ServletAdd extends HttpServlet {
     Gson gson=new GsonBuilder().setPrettyPrinting().create(); //GsonBuilder() используют для корректного возращения json
 
    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //чтобы мы могли считывать тело нашего запроса
         StringBuffer jb= new StringBuffer();
         String line;
         try{
@@ -41,7 +42,7 @@ public class ServletAdd extends HttpServlet {
         JsonObject jobj=gson.fromJson(String.valueOf(jb), JsonObject.class);
 
         request.setCharacterEncoding("utf-8");
-
+        //парсим json на получение данных
         String name=jobj.get("name").getAsString();
         String surname=jobj.get("surname").getAsString();
         double salary=jobj.get("salary").getAsDouble();
@@ -49,6 +50,7 @@ public class ServletAdd extends HttpServlet {
         User user=new User(name,surname,salary);
         model.add(user,counter.getAndIncrement());
 
+        //сервлет должен возвращать данные в формате json
         response.setContentType("application/json;charset=utf-8");
         PrintWriter pw=response.getWriter();
         pw.print(gson.toJson(model.getFromList())); //возвращаем полный обнволенный список пользователей на наш запрос
